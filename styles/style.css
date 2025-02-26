@@ -1,0 +1,61 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+}
+
+header{
+    height: 80px;
+    padding: 0 30px 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: azure;
+}
+
+#logo{
+    height: auto;
+    width: auto;
+    display: flex;
+}
+
+.logo-img{
+    height: 80px;
+    width: 80px;
+}
+
+.social-media{
+    width: 130px;
+}
+
+.social-media-itens{
+    width: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.fa-brands{
+    color: blue;
+    font-size: 1.6rem;
+}
+
+body{
+    height: 100%;
+    width: 100%;
+}
+
+main{
+    height: 90vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.main-content{
+    height: 100%;
+    width: 98%;
+    background-color: azure;
+}
