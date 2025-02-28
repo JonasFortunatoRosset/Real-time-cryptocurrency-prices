@@ -1,74 +1,99 @@
 // Carregar os dados das crytomoedas na home
-async function loadData(){
+async function loadData(url){
     const data = await fetch('https://api.coincap.io/v2/assets', {method: 'GET', mode: 'cors'});
     const coin_data = await data.json();
-    const main_content = document.getElementById('main-content');
-    
+
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = '';
+
     for(const coin of coin_data.data){
-        const card_data = coin;
-        const card = new Coin(card_data.id,card_data.rank,card_data.symbol,card_data.supply,card_data.maxSupply,card_data.marketCapUsd,card_data.volumeUsd24Hr,card_data.priceUsd,card_data.changePercent24Hr,card_data.vwap24Hr,card_data.explorer);
-        const card_element = document.createElement('div'); // card
-        card_element.className = 'card_element';
+        const new_card = new Coin(coin.id,
+            coin.rank || 'N/A',
+            coin.symbol || 'N/A',
+            coin.supply || 0,
+            coin.maxSupply || 0,
+            coin.marketCapUsd || 0,
+            coin.volumeUsd24Hr || 0,
+            coin.priceUsd || 0,
+            coin.changePercent24Hr || 0,
+            coin.vwap24Hr || 0,
+            coin.explorer || 'N/A');
+
+        let imageUrl = '../assets/favicon.png';
+        try {
+            const coin_image = await fetch(`https://api.coingecko.com/api/v3/coins/${new_card.id}`, { method: 'GET', mode: 'cors' });
+            const coin_image_converted = await coin_image.json();
+            if (coin_image_converted.image && coin_image_converted.image.large) {
+                imageUrl = coin_image_converted.image.large; // Atualiza a imagem, se encontrada    
+            } else if(coin_image_converted.image.small){
+                imageUrl = coin_image_converted.image.small;
+            }
+        } catch (error) {
+            console.log(`Erro ao buscar a imagem da moeda ${new_card.id}: ${error}`);
+        }
+        const card = document.createElement('div'); // card
+        card.className = 'card';
+        card.style.backgroundImage = `url('${imageUrl}')`;
         const cryptoNameBg = document.createElement('div');
         cryptoNameBg.className = 'cryptoNameBg';
         const cryptoName = document.createElement('span');
         cryptoName.className = 'cryptoName';
         cryptoName.innerText = `${coin.id}`;
         cryptoNameBg.appendChild(cryptoName);
-        card_element.appendChild(cryptoNameBg);
-        card_element.onclick = () => {
+        card.appendChild(cryptoNameBg);
+        card.onclick = () => {
             const modal = document.getElementById('modal');
             modal.style.visibility = 'visible';
             const modalContent = document.getElementById('modal-content');
             modalContent.innerHTML = '';
 
             const cryptoImage = document.createElement('div');
-            cryptoImage.style.backgroundImage = `url('https://api.coingecko.com/api/v3/coins/${coin.id}')`;
+            cryptoImage.style.backgroundImage = `url('${imageUrl}')`;
             cryptoImage.className = 'crypto-image';
 
             const id = document.createElement('span');
             id.className = 'crypto-details';
-            id.innerText = `Id: ${coin.id}`;
+            id.innerText = `Id: ${new_card.id}`;
 
             const rank = document.createElement('span');
             rank.className = 'crypto-details';
-            rank.innerText = `Rank: ${coin.rank}`;
+            rank.innerText = `Rank: ${new_card.rank}`;
 
             const symbol = document.createElement('span');
             symbol.className = 'crypto-details';
-            symbol.innerText = `symbol: ${coin.symbol}`;
+            symbol.innerText = `symbol: ${new_card.symbol}`;
 
             const supply = document.createElement('span');
             supply.className = 'crypto-details';
-            supply.innerText = `supply: ${coin.supply}`;
+            supply.innerText = `supply: ${new_card.supply}`;
 
             const maxSupply = document.createElement('span');
             maxSupply.className = 'crypto-details';
-            maxSupply.innerText = `maxSupply: ${coin.maxSupply}`;
+            maxSupply.innerText = `maxSupply: ${new_card.maxSupply}`;
             
             const marketCapUsd = document.createElement('span');
             marketCapUsd.className = 'crypto-details';
-            marketCapUsd.innerText = `marketCapUsd: ${coin.marketCapUsd}`;
+            marketCapUsd.innerText = `marketCapUsd: ${new_card.marketCapUsd}`;
             
             const volumeUsd24Hr = document.createElement('span');
             volumeUsd24Hr.className = 'crypto-details';
-            volumeUsd24Hr.innerText = `volumeUsd24Hr: ${coin.volumeUsd24Hr}`;
+            volumeUsd24Hr.innerText = `volumeUsd24Hr: ${new_card.volumeUsd24Hr}`;
             
             const priceUsd = document.createElement('span');
             priceUsd.className = 'crypto-details';
-            priceUsd.innerText = `priceUsd: ${coin.priceUsd}`;
+            priceUsd.innerText = `priceUsd: ${new_card.priceUsd}`;
             
             const changePercent24Hr = document.createElement('span');
             changePercent24Hr.className = 'crypto-details';
-            changePercent24Hr.innerText = `changePercent24Hr: ${coin.changePercent24Hr}`;
+            changePercent24Hr.innerText = `changePercent24Hr: ${new_card.changePercent24Hr}`;
             
             const vwap24Hr = document.createElement('span');
             vwap24Hr.className = 'crypto-details';
-            vwap24Hr.innerText = `vwap24Hr: ${coin.vwap24Hr}`;
+            vwap24Hr.innerText = `vwap24Hr: ${new_card.vwap24Hr}`;
             
             const explorer = document.createElement('span');
             explorer.className = 'crypto-details';
-            explorer.innerText = `explorer: ${coin.explorer}`;
+            explorer.innerText = `explorer: ${new_card.explorer}`;
 
 
             modalContent.appendChild(cryptoImage);
@@ -84,9 +109,8 @@ async function loadData(){
             modalContent.appendChild(vwap24Hr);
             modalContent.appendChild(explorer);
         }
-        
+        mainContent.appendChild(card);
     }
-
 }
 
 class Coin{
