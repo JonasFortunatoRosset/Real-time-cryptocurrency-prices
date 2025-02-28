@@ -1,3 +1,5 @@
 import loadData from './loadData.js';
 
-loadData()
+window.onload = async () => {
+    loadData()
+}

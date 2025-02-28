@@ -59,3 +59,10 @@ main{
     width: 98%;
     background-color: azure;
 }
+
+.card-element{
+    height: 500px;
+    width: 300px;
+    background-size: cover;
+}
+

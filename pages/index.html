@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Cryptocurrency Prices </title>
     <link rel="shortcut icon" href="../assets/favicon.png" type="image/x-icon">
@@ -14,16 +15,18 @@
         </div>
         <nav class="social-media">
             <ul class="social-media-itens">
-                <a href="" target="_blank"> <i class="fa-brands fa-instagram"></i> </a>
-                <a href="" target="_blank"> <i class="fa-brands fa-youtube"></i> </a>
-                <a href="" target="_blank"> <i class="fa-brands fa-github"></i> </a>
-                <a href="" target="_blank"> <i class="fa-brands fa-linkedin-i"></i> </a>
+                <i class="fa-brands fa-instagram"><a href="" target="_blank"></a></i>
+                <i class="fa-brands fa-youtube"><a href="" target="_blank"></a></i>
+                <i class="fa-brands fa-github"><a href="" target="_blank"></a></i>
+                <i class="fa-brands fa-linkedin-i"><a href="" target="_blank"></a></i>
             </ul>
         </nav>
     </header>
     <main>
-        <div class="main-content">
-            <div class="cards" id="cards-container"></div>
+        <div class="main-content"></div>
+
+        <div class="modal" id="modal" onclick="hideModal()">
+            <div class="modal-content" id="modal-content"></div>
         </div>
     </main>
     
