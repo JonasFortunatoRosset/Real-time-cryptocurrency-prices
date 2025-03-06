@@ -1,36 +1,28 @@
-// Carregar os dados das crytomoedas na home
+// Carregar os dados das criptomoedas na home
 async function loadData(url){
-    const data = await fetch('https://api.coincap.io/v2/assets', {method: 'GET', mode: 'cors'});
+    const data = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd', { method: 'GET', mode: 'cors' });
     const coin_data = await data.json();
 
     const mainContent = document.getElementById('main-content');
     mainContent.innerHTML = '';
 
-    for(const coin of coin_data.data){
-        const new_card = new Coin(coin.id,
-            coin.rank || 'N/A',
+    for (const coin of coin_data) {
+        const new_card = new Coin(
+            coin.id,
+            coin.market_cap_rank || 'N/A',
             coin.symbol || 'N/A',
-            coin.supply || 0,
-            coin.maxSupply || 0,
-            coin.marketCapUsd || 0,
-            coin.volumeUsd24Hr || 0,
-            coin.priceUsd || 0,
-            coin.changePercent24Hr || 0,
-            coin.vwap24Hr || 0,
-            coin.explorer || 'N/A');
+            coin.circulating_supply || 0,
+            coin.total_supply || 0,
+            coin.market_cap || 0,
+            coin.total_volume || 0,
+            coin.current_price || 0,
+            coin.price_change_percentage_24h || 0,
+            coin.market_cap_change_24h || 0,
+            coin.id 
+        );
 
-        let imageUrl = '../assets/favicon.png';
-        try {
-            const coin_image = await fetch(`https://api.coingecko.com/api/v3/coins/${new_card.id}`, { method: 'GET', mode: 'cors' });
-            const coin_image_converted = await coin_image.json();
-            if (coin_image_converted.image && coin_image_converted.image.large) {
-                imageUrl = coin_image_converted.image.large; // Atualiza a imagem, se encontrada    
-            } else if(coin_image_converted.image.small){
-                imageUrl = coin_image_converted.image.small;
-            }
-        } catch (error) {
-            console.log(`Erro ao buscar a imagem da moeda ${new_card.id}: ${error}`);
-        }
+        let imageUrl = coin.image || '../assets/favicon.png'; 
+
         const card = document.createElement('div'); // card
         card.className = 'card';
         card.style.backgroundImage = `url('${imageUrl}')`;
@@ -38,7 +30,7 @@ async function loadData(url){
         cryptoNameBg.className = 'cryptoNameBg';
         const cryptoName = document.createElement('span');
         cryptoName.className = 'cryptoName';
-        cryptoName.innerText = `${coin.id}`;
+        cryptoName.innerText = `${coin.name}`;
         cryptoNameBg.appendChild(cryptoName);
         card.appendChild(cryptoNameBg);
         card.onclick = () => {
@@ -61,40 +53,39 @@ async function loadData(url){
 
             const symbol = document.createElement('span');
             symbol.className = 'crypto-details';
-            symbol.innerText = `symbol: ${new_card.symbol}`;
+            symbol.innerText = `Symbol: ${new_card.symbol}`;
 
             const supply = document.createElement('span');
             supply.className = 'crypto-details';
-            supply.innerText = `supply: ${new_card.supply}`;
+            supply.innerText = `Supply: ${new_card.supply}`;
 
             const maxSupply = document.createElement('span');
             maxSupply.className = 'crypto-details';
-            maxSupply.innerText = `maxSupply: ${new_card.maxSupply}`;
+            maxSupply.innerText = `Max Supply: ${new_card.maxSupply}`;
             
             const marketCapUsd = document.createElement('span');
             marketCapUsd.className = 'crypto-details';
-            marketCapUsd.innerText = `marketCapUsd: ${new_card.marketCapUsd}`;
-            
+            marketCapUsd.innerText = `Market Cap: ${new_card.marketCapUsd}`;
+
             const volumeUsd24Hr = document.createElement('span');
             volumeUsd24Hr.className = 'crypto-details';
-            volumeUsd24Hr.innerText = `volumeUsd24Hr: ${new_card.volumeUsd24Hr}`;
+            volumeUsd24Hr.innerText = `Volume (24h): ${new_card.volumeUsd24Hr}`;
             
             const priceUsd = document.createElement('span');
             priceUsd.className = 'crypto-details';
-            priceUsd.innerText = `priceUsd: ${new_card.priceUsd}`;
+            priceUsd.innerText = `Price: $${new_card.priceUsd}`;
             
             const changePercent24Hr = document.createElement('span');
             changePercent24Hr.className = 'crypto-details';
-            changePercent24Hr.innerText = `changePercent24Hr: ${new_card.changePercent24Hr}`;
-            
+            changePercent24Hr.innerText = `Change (24h): ${new_card.changePercent24Hr}%`;
+
             const vwap24Hr = document.createElement('span');
             vwap24Hr.className = 'crypto-details';
-            vwap24Hr.innerText = `vwap24Hr: ${new_card.vwap24Hr}`;
-            
+            vwap24Hr.innerText = `VWAP (24h): ${new_card.vwap24Hr}`;
+
             const explorer = document.createElement('span');
             explorer.className = 'crypto-details';
-            explorer.innerText = `explorer: ${new_card.explorer}`;
-
+            explorer.innerText = `Explorer: https://www.coingecko.com/en/coins/${new_card.id}`;
 
             modalContent.appendChild(cryptoImage);
             modalContent.appendChild(id);
@@ -114,7 +105,7 @@ async function loadData(url){
 }
 
 class Coin{
-    constructor(id,rank,symbol,supply,maxSupply, marketCapUsd,volumeUsd24Hr,priceUsd,changePercent24Hr,vwap24Hr,explorer){
+    constructor(id, rank, symbol, supply, maxSupply, marketCapUsd, volumeUsd24Hr, priceUsd, changePercent24Hr, vwap24Hr, explorer){
         this.id = id;
         this.rank = rank;
         this.symbol = symbol;
@@ -128,6 +119,5 @@ class Coin{
         this.explorer = explorer;
     }
 }
-
 
 export default loadData;
